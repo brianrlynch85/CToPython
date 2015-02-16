@@ -1,6 +1,10 @@
-
-// g++ -o CppCallingPython CppCallingPython.cpp -I/usr/include/python2.7/ -lpython2.7
-// ./CppCallingPython py_func.py PlotVField
+// -----------------------------------------------------------------------
+//
+//                                  CppCallingPython.cpp V 0.01
+//
+//                                (c) Brian Lynch February, 2015
+//
+// -----------------------------------------------------------------------
 
 
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION

@@ -1,21 +1,59 @@
+# -------------------------------------------------------------------------------------
+#
+#                               Makefile for CppToPython
+#                                        V 0.01
+#
+#                            (c) Brian Lynch February, 2015
+#
+# -------------------------------------------------------------------------------------
+# possible make options are:
+#      "make clean"            to clean up all .o and temp files
+#      "make mrclean"          to clean up all .o, temp files, and executables
+#      "make all"              to compile everything
+
+CC       := g++
+DEBUG    := -g
+CCFLAGS  := $(DEBUG) -Wall -std=c++0x
+PYTFLAGS := -lpython2.7
+
+IPYTFLAGS := -I/usr/include/python2.7/
 
 DIR_BASE := $(CURDIR)
 
-CC     := g++
-CFLAGS := -g -Wall -std=c++11
-SHM_IN_FLAG := -D _DEVICE_NAME_LOCK_PATH_=\".\" -D _SHM_BASEFILE_=\"$(CURDIR)/CAM\"
-IDFLAGS = -I$(CURDIR)
+.PHONY: clean all dir_b myclean example_commands
 
-all:
-	$(CC) $(CFLAGS) -o single_parametric single_parametric.cpp vd_shm.c co_options.c $(SHM_IN_FLAG)
-	@echo "Successfully compiled!"
+all: dir_b
+	@echo "   "
+	@echo "SUCCESSFULlY COMPILED!"
+	@echo "Copied executables into /bin"
+	@echo "   "
 
-shm_servers:
-	@touch  $(DIR_BASE)/CAM
+clean:
+	@rm -f $(DIR_BASE)/*.o
+	@rm -f $(DIR_BASE)/*~
+	@echo "   "
+	@echo "Deleted *.o and *~ files"
+	@echo "   "
 
-clean_shm:
-	@rm -rf  $(DIR_BASE)/CAM
-	@chmod u+x clean_shm.sh
-	@./clean_shm.sh
+mrclean: clean
+	rm -f $(DIR_BASE)/CppCallingPython
+	@echo "   "
+	@echo "Deleted executable files"
+	@echo "   "
+	
+example_commands:
+	@echo "   "
+	@echo "./CppCallingPython py_func.py PlotVField"
+	@echo "   "
 
+# --------------------------------------------------------------------------------------
+# Directory base
+# --------------------------------------------------------------------------------------
 
+dir_b: $(DIR_BASE)/CppCallingPython
+
+$(DIR_BASE)/CppCallingPython.o: $($@:.o=.cpp) $($@:.o=.h) 
+	$(CC) -o -c $@ $< $(CCFLAGS)
+
+$(DIR_BASE)/CppCallingPython:  $(DIR_BASE)/CppCallingPython.cpp        
+	$(CC) -o $@ $^ $(CCFLAGS) $(IPYTFLAGS) -lpython2.7
