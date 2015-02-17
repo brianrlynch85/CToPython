@@ -9,10 +9,10 @@
 def PlotVField(col0,col1,col2,col3):
   
    print '!! BEGIN FUNCTION PLOTVFIELD' 
-   print col0
-   print col1
-   print col2
-   print col3
+   #print col0
+   #print col1
+   #print col2
+   #print col3
   
    import matplotlib.pyplot as plt
    #import numpy as np

@@ -43,7 +43,7 @@ mrclean: clean
 	
 example_commands:
 	@echo "   "
-	@echo "./CppCallingPython py_func.py PlotVField"
+	@echo "./CppCallingPython py_func PlotVField"
 	@echo "   "
 
 # --------------------------------------------------------------------------------------
