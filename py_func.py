@@ -9,7 +9,7 @@
 def PlotVField(col0,col1,col2,col3):
   
    print '!! BEGIN FUNCTION PLOTVFIELD' 
-   #print col0
+   print col0
    #print col1
    #print col2
    #print col3
@@ -18,6 +18,8 @@ def PlotVField(col0,col1,col2,col3):
    #import numpy as np
    #import time
    import pylab as py
+   
+   plt.clf()
    
    plt.ion()
    
@@ -30,17 +32,18 @@ def PlotVField(col0,col1,col2,col3):
                             fontproperties={'weight': 'bold'})
                             
    #store current axis values for changing later                            
-   #xmin,xmax,ymin,ymax = plt.axis()
-   #axis((0,1024,0,768))
- #  gca().set_xlabel('x [Pixels]')
- #  gca().set_ylabel('y [Pixels]')
+   xmin,xmax,ymin,ymax = plt.axis()
+   py.axis((0,1024,0,768))
+   #gca().set_xlabel('x [Pixels]')
+   #gca().set_ylabel('y [Pixels]')
 
    #invert the y-axis for image coordinates
   # gca().invert_yaxis()
   # grid(True)  
    
    plt.draw()
-   plt.pause(2.0)
+   plt.pause(0.1)
+   
    #show()
 
    #time.sleep(5.0)

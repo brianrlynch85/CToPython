@@ -15,6 +15,7 @@
 #include <fstream>
 #include <vector>
 #include <math.h>
+#include <string>
 
 #include "numpy/arrayobject.h"
 
@@ -30,6 +31,84 @@ void PyInit_Numpy(){
 	
 }
 #endif
+
+const int ArraySizeCHECK = 1000;
+
+int load_data_file(std::string &infilename, std::vector<double> &id,
+                                            std::vector<double> &ti,
+                                            std::vector<double> &xx,
+                                            std::vector<double> &yy,
+                                            std::vector<double> &vx,
+                                            std::vector<double> &vy,
+                                            double **Array0,
+                                            double **Array1,
+                                            double **Array2,
+                                            double **Array3){
+   
+   //Input string information
+   std::string input_filename_s(infilename.c_str());
+   std::ifstream input_file(input_filename_s.c_str(), std::ifstream::in);
+    
+    //Attempt to read the input file
+   if(input_file.is_open()){
+     
+      std::cout << "Reading inputdata... FROM : " << infilename.c_str() << std::endl;
+      double col1 = 0.0,
+             col2 = 0.0,
+             col3 = 0.0,
+             col4 = 0.0,
+             col5 = 0.0,
+             col6 = 0.0;
+             
+      id.clear();
+      ti.clear();
+      xx.clear();
+      yy.clear();
+      vx.clear();
+      vy.clear();
+     
+      while(input_file.good()){
+        
+         input_file >> col1 >> col2 >> col3 >> col4 >> col5 >> col6;
+        
+         if(!input_file.eof()){ //Last line is not stored twice
+           
+            id.push_back(col1);
+            ti.push_back(col2);
+            xx.push_back(col3);
+            yy.push_back(col4);
+            vx.push_back(col5);
+            vy.push_back(col6); 
+           
+         }
+       
+      }
+     
+   }else{
+     
+      std::cerr << "Error opening file:" << input_filename_s.c_str();
+      std::cerr << std::endl;
+      return (-1);
+      
+   }//Done attempting to read file
+   
+   input_file.close();
+   
+   for(int i = 0; i < ArraySizeCHECK; i++){
+      
+      if(i < id.size()){
+         (*Array0)[i] = xx.at(i);
+         (*Array1)[i] = yy.at(i);
+         (*Array2)[i] = vx.at(i);
+         (*Array3)[i] = vy.at(i);
+      }
+      
+   }
+   
+   std::cout << "Done reading input data" << std::endl;
+   
+return 1;
+}
 
 int main (int argc, char *argv[]){
   
@@ -60,63 +139,18 @@ int main (int argc, char *argv[]){
         return 1;
     }
     
-   //Input string information
-   std::string input_filename_s("pstate_image_0022.txt");
-   std::ifstream input_file(input_filename_s.c_str(), std::ifstream::in);
-   std::vector<double> id, ti, xx, yy, vx, vy;
-    
-    //Attempt to read the input file
-   if(input_file.is_open()){
-     
-      std::cout << "Reading inputdata..." << std::endl;
-      double col1 = 0.0,
-             col2 = 0.0,
-             col3 = 0.0,
-             col4 = 0.0,
-             col5 = 0.0,
-             col6 = 0.0;
-     
-      while(input_file.good()){
-        
-         input_file >> col1 >> col2 >> col3 >> col4 >> col5 >> col6;
-        
-         if(!input_file.eof()){ //Last line is not stored twice
-           
-            id.push_back(col1);
-            ti.push_back(col2);
-            xx.push_back(col3);
-            yy.push_back(col4);
-            vx.push_back(col5);
-            vy.push_back(col6); 
-           
-         }
-       
-      }
-     
-   }else{
-     
-      std::cerr << "Error opening file:" << input_filename_s.c_str();
-      std::cerr << std::endl;
-      return (-1);
-      
-   }//Done attempting to read file
+   
    
    //Set the new python array dimension
-   dims[0] = vy.size();
+   std::vector<double> id, ti, xx, yy, vx, vy;
+   dims[0] = ArraySizeCHECK;
    const int ArraySize = vy.size();
-   double *Array0 = new double[ArraySize],
-          *Array1 = new double[ArraySize],
-          *Array2 = new double[ArraySize],
-          *Array3 = new double[ArraySize];
+   double *Array0 = new double[ArraySizeCHECK],
+          *Array1 = new double[ArraySizeCHECK],
+          *Array2 = new double[ArraySizeCHECK],
+          *Array3 = new double[ArraySizeCHECK];
           
-   for(int i = 0; i < ArraySize; i++){
-      
-      Array0[i] = xx.at(i);
-      Array1[i] = yy.at(i);
-      Array2[i] = vx.at(i);
-      Array3[i] = vx.at(i);
-      
-   }
+   
 
    // Initialize Python
    printf("Initializing Python\n");
@@ -167,52 +201,79 @@ int main (int argc, char *argv[]){
    printf("Initializing Numpy library\n");
    PyInit_Numpy();
    
-   printf("Sending C++ arrays to Python\n");
-   //Remeber to NOT free Array0-4 while Px, etc are still in existence.
-   pX = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, Array0);
-   if(NULL == pX){
-      printf("Error with pX PyArray_SimpleNewFromData %p\n",pX);
-      exit(-1);
-   }
-   pY = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, Array1);
-   if(NULL == pY){
-      printf("Error with pY PyArray_SimpleNewFromData %p\n",pY);
-      exit(-1);
-   }
-   pVx = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, Array2);
-   if(NULL == pVx){
-      printf("Error with pVx PyArray_SimpleNewFromData %p\n",pVx);
-      exit(-1);
-   }
-   pVy = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, Array3);
-   if(NULL == pVy){
-      printf("Error with pVy PyArray_SimpleNewFromData %p\n",pVy);
-      exit(-1);
-   }
-
-   //Implement the module's namespace. This function never fails.
-   pDict = PyModule_GetDict(pModule);
-
-   //Returns uninitialize tuple of given length
-   pArgTuple = PyTuple_New(4); //4 total arrays going in
+   //NOW READ THE DATA FROM FILE
+   std::string Lin_filename("output/pstate_list.dat");
+   std::string fileline, 
+               Iin_filename;
+   std::ifstream Lin_file;
+   Lin_file.open(Lin_filename.c_str());
+   int itr = 0;
    
-   //Insert a reference to each pX object at appropriate position
-   //within the pArgTuple. The reference to pX is STOLEN.
-   PyTuple_SetItem(pArgTuple, 0, pX);
-   PyTuple_SetItem(pArgTuple, 1, pY);
-   PyTuple_SetItem(pArgTuple, 2, pVx);
-   PyTuple_SetItem(pArgTuple, 3, pVy);
+   while(std::getline(Lin_file,fileline)){
 
-   //pFunc is a borrowed reference
-   pFunc = PyDict_GetItemString(pDict, pFuncName); // pFunc is also a borrowed reference
+      Iin_filename = fileline;
+      load_data_file(Iin_filename,id,ti,xx,yy,vx,vy,&Array0,&Array1,&Array2,&Array3);
+      
+      for(int i=0; i < ArraySizeCHECK; i++){
+         std::cout << Array1[i] << " ";  
+      }
+   
+      printf("Sending C++ arrays to Python\n");
+      //Remeber to NOT free Array0-4 while Px, etc are still in existence.
+      pX = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, Array0);
+      if(NULL == pX){
+         printf("Error with pX PyArray_SimpleNewFromData %p\n",pX);
+         exit(-1);
+      }
+      pY = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, Array1);
+      if(NULL == pY){
+         printf("Error with pY PyArray_SimpleNewFromData %p\n",pY);
+         exit(-1);
+      }
+      pVx = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, Array2);
+      if(NULL == pVx){
+         printf("Error with pVx PyArray_SimpleNewFromData %p\n",pVx);
+         exit(-1);
+      }
+      pVy = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, Array3);
+      if(NULL == pVy){
+         printf("Error with pVy PyArray_SimpleNewFromData %p\n",pVy);
+         exit(-1);
+      }   
 
-   if(PyCallable_Check(pFunc)){
+      //Implement the module's namespace. This function never fails.
+      pDict = PyModule_GetDict(pModule);
+
+      //Returns uninitialize tuple of given length
+      pArgTuple = PyTuple_New(4); //4 total arrays going in
+   
+      //Insert a reference to each pX object at appropriate position
+      //within the pArgTuple. The reference to pX is STOLEN.
+      PyTuple_SetItem(pArgTuple, 0, pX);
+      PyTuple_SetItem(pArgTuple, 1, pY);
+      PyTuple_SetItem(pArgTuple, 2, pVx);
+      PyTuple_SetItem(pArgTuple, 3, pVy);
+
+      //pFunc is a borrowed reference
+      pFunc = PyDict_GetItemString(pDict, pFuncName); // pFunc is also a borrowed reference
+ 
+      if(PyCallable_Check(pFunc)){
       
-      pValue = PyObject_CallObject(pFunc, pArgTuple);
+         pValue = PyObject_CallObject(pFunc, pArgTuple);
       
-   }else{
+      }else{
       
-      printf ("Function pFunc not callable !\n");
+         printf ("Function pFunc not callable !\n");
+      
+      }
+      
+      itr++;
+      std::cout << "ITR #: " << itr << std::endl;
+      
+      Py_XDECREF(pX);
+      Py_XDECREF(pY);
+      Py_XDECREF(pVx);
+      Py_XDECREF(pVy);
       
    }
 
