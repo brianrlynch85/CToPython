@@ -2,3 +2,6 @@
 *.o
 *.out
 *~
+CppCallingPython
+py_func.pyc
+*.txt
