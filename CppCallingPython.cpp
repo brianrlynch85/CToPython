@@ -32,7 +32,7 @@ void PyInit_Numpy(){
 }
 #endif
 
-const int ArraySizeCHECK = 1000;
+const int ArraySizeCHECK = 150;
 
 int load_data_file(std::string &infilename, std::vector<double> &id,
                                             std::vector<double> &ti,
@@ -79,7 +79,11 @@ int load_data_file(std::string &infilename, std::vector<double> &id,
             yy.push_back(col4);
             vx.push_back(col5);
             vy.push_back(col6); 
-           
+        /*    xx.push_back(col1);
+            yy.push_back(col2);
+            vx.push_back(col3);
+            vy.push_back(col4); 
+          */ 
          }
        
       }
@@ -202,7 +206,7 @@ int main (int argc, char *argv[]){
    PyInit_Numpy();
    
    //NOW READ THE DATA FROM FILE
-   std::string Lin_filename("output/pstate_list.dat");
+   std::string Lin_filename("output/data_list.txt");
    std::string fileline, 
                Iin_filename;
    std::ifstream Lin_file;
@@ -214,9 +218,9 @@ int main (int argc, char *argv[]){
       Iin_filename = fileline;
       load_data_file(Iin_filename,id,ti,xx,yy,vx,vy,&Array0,&Array1,&Array2,&Array3);
       
-      for(int i=0; i < ArraySizeCHECK; i++){
-         std::cout << Array1[i] << " ";  
-      }
+   //   for(int i=0; i < ArraySizeCHECK; i++){
+   //      std::cout << Array1[i] << " ";  
+   //   }
    
       printf("Sending C++ arrays to Python\n");
       //Remeber to NOT free Array0-4 while Px, etc are still in existence.

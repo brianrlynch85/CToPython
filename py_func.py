@@ -9,7 +9,7 @@
 def PlotVField(col0,col1,col2,col3):
   
    print '!! BEGIN FUNCTION PLOTVFIELD' 
-   print col0
+   #print col0
    #print col1
    #print col2
    #print col3
@@ -42,7 +42,7 @@ def PlotVField(col0,col1,col2,col3):
   # grid(True)  
    
    plt.draw()
-   plt.pause(0.1)
+   #plt.pause(0.1)
    
    #show()
 
