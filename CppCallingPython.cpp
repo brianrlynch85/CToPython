@@ -32,7 +32,7 @@ void PyInit_Numpy(){
 }
 #endif
 
-const int ArraySizeCHECK = 150;
+const int ArraySizeCHECK = 1800;
 
 int load_data_file(std::string &infilename, std::vector<double> &id,
                                             std::vector<double> &ti,
@@ -206,7 +206,7 @@ int main (int argc, char *argv[]){
    PyInit_Numpy();
    
    //NOW READ THE DATA FROM FILE
-   std::string Lin_filename("output/data_list.txt");
+   std::string Lin_filename("output/pstate_list.dat");
    std::string fileline, 
                Iin_filename;
    std::ifstream Lin_file;
