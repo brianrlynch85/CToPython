@@ -50,6 +50,36 @@ def PlotVField(col0,col1,col2,col3):
 
    print '!! END FUNCTION PLOTVFIELD' 
    return
+  
+##############################################################################
+def PlotXY(col0,col1,col2,col3):
+  
+   print '!! BEGIN FUNCTION PLOTXY' 
+   #print col0
+   #print col1
+   #print col2
+   #print col3
+
+   import matplotlib.pyplot as plt
+   import numpy as np
+
+   plt.ion()
+   plt.clf()
+  # fig = plt.figure()
+  # ax = fig.add_subplot(111)
+
+   #pointsP = ax.plot(col0,col1,'bo',markersize=4.0)[0]
+   plt.plot(col0,col1,'bo',markersize=4.0)
+
+   #pointsP.set_xdata(col0)
+   #pointsP.set_ydata(col1)
+   #plt.pause(0.001)
+   plt.draw()
+  # fig.canvas.draw()
+
+   print 'END PROGRAM PLOTXY'
+
+   return
 
 def printhello():
    print '!!!!!!!!!!!!Hello From Python Bitches!!!!!!!!!!!!'

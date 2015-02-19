@@ -32,7 +32,7 @@ void PyInit_Numpy(){
 }
 #endif
 
-const int ArraySizeCHECK = 1800;
+const int ArraySizeCHECK = 2000;
 
 int load_data_file(std::string &infilename, std::vector<double> &id,
                                             std::vector<double> &ti,
