@@ -63,19 +63,21 @@ def PlotXY(col0,col1,col2,col3):
    import matplotlib.pyplot as plt
    import numpy as np
 
+   
    plt.ion()
-   plt.clf()
-  # fig = plt.figure()
-  # ax = fig.add_subplot(111)
-
-   #pointsP = ax.plot(col0,col1,'bo',markersize=4.0)[0]
-   plt.plot(col0,col1,'bo',markersize=4.0)
-
-   #pointsP.set_xdata(col0)
-   #pointsP.set_ydata(col1)
-   #plt.pause(0.001)
+   pointsP, = plt.plot(0,1,'bo',markersize=4.0)
+   pointsP.set_xdata(col0)
+   pointsP.set_ydata(col1)
    plt.draw()
+   plt.pause(0.1)
+   
   # fig.canvas.draw()
+ 
+   #plt.ion()
+   #plt.clf()
+   #plt.plot(col0,col1,'bo',markersize=4.0)
+   #plt.pause(0.01)
+   #plt.draw()
 
    print 'END PROGRAM PLOTXY'
 
