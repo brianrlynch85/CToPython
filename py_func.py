@@ -42,7 +42,7 @@ def PlotVField(col0,col1,col2,col3):
   # grid(True)  
    
    plt.draw()
-   #plt.pause(0.1)
+   plt.pause(0.0001)
    
    #show()
 

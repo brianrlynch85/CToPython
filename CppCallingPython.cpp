@@ -6,6 +6,8 @@
 //
 // -----------------------------------------------------------------------
 
+//g++ CppCallingPython.cpp -I/usr/include/python2.7 -I/usr/include/x86_64-linux-gnu/python2.7  -fno-strict-aliasing -Wdate-time -D_FORTIFY_SOURCE=2 -g -fstack-protector-strong -Wformat -Werror=format-security  -DNDEBUG -g -fwrapv -O2 -Wall -lpython2.7
+
 
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 
@@ -79,11 +81,6 @@ int load_data_file(std::string &infilename, std::vector<double> &id,
             yy.push_back(col4);
             vx.push_back(col5);
             vy.push_back(col6); 
-        /*    xx.push_back(col1);
-            yy.push_back(col2);
-            vx.push_back(col3);
-            vy.push_back(col4); 
-          */ 
          }
        
       }
@@ -158,6 +155,7 @@ int main (int argc, char *argv[]){
 
    // Initialize Python
    printf("Initializing Python\n");
+   Py_SetProgramName(argv[0]);
    Py_Initialize ();
    if(0 == Py_IsInitialized()){
       printf("ERROR: Python failed to initialize\n");
