@@ -51,7 +51,11 @@ def PlotVField(col0,col1,col2,col3):
    #print '!! END FUNCTION PLOTVFIELD' 
    return
 
-def printhello():
+def printhello(col0,col1,col2,col3):
+
+   import sys
+   
 
    print '!!!!!!!!!!!!Hello From Python Bitches!!!!!!!!!!!!'
+   sys.stdout.flush()
    return

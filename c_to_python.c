@@ -15,6 +15,7 @@
  *
  ************************************************************************/
 
+//Use python2.7-config --cflags to find the appropriate command line options
 //g++ c_to_python.c -I/usr/include/python2.7 -I/usr/include/x86_64-linux-gnu/python2.7  -fno-strict-aliasing -Wdate-time -D_FORTIFY_SOURCE=2 -g -fstack-protector-strong -Wformat -Werror=format-security  -DNDEBUG -g -fwrapv -O2 -Wall -lpython2.7
 
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
@@ -169,7 +170,7 @@ int main (int argc, char *argv[]){
    PyInit_Numpy();
    
    //NOW READ THE TEST DATA FROM FILE
-   std::string Lin_filename("output/pstate_list.dat");
+   std::string Lin_filename("input/pstate_list.dat");
    std::string fileline, 
                Iin_filename;
    std::ifstream Lin_file;
@@ -223,6 +224,7 @@ int main (int argc, char *argv[]){
       if(PyCallable_Check(pFunc)){
       
          pValue = PyObject_CallObject(pFunc, pArgTuple);
+         PyErr_Print();
       
       }else{
          printf("Function pFunc not callable !\n");
