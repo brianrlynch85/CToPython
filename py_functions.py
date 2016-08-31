@@ -15,98 +15,100 @@
  *
  ************************************************************************'''
 
-def PlotVField(col0,col1,col2,col3):
-  
+def PlotVField(x,y,vx,vy):
    #print '!! BEGIN FUNCTION PLOTVFIELD' 
   
    import matplotlib.pyplot as plt
    import matplotlib.gridspec as gridspec
-   import numpy as np
-   import ParticleSorting as PS
+   from numpy import histogram
    import PairCorrCalc as PCC
    
-   plt.clf()
-   
-   plt.ion()
-   
-   fig = plt.gcf()
-   gs = gridspec.GridSpec(8,24)
-   #ax = plt.subplot(gs[0,0])
-  
-   #******************** vector field plot ********************#                   
-   #store current axis values for changing later                            
-   axV = plt.subplot(gs[0:5,0:15])
-    #load the quiver plot
-   Q = axV.quiver(col0,col1,col2,col3,color='blue')
-   #Q.set_UVC(col2,col3)
+   if not plt.fignum_exists(1):
+       plt.figure(figsize=(16,8))
+       plt.ion()
 
-   #name the quiver plot and add title
+   plt.clf()
+   fig = plt.gcf()
+
+   gs = gridspec.GridSpec(8,24)
+  
+      #******************************************** vector field                  
+   #store current axis values for changing later                            
+   axV = plt.subplot(gs[0:8,0:15])
+   axV.grid(True) 
+
+   Q = axV.quiver(x,y,vx,vy,color='blue')
+   #Q.set_UVC(vx,vy)
+
    q = axV.quiverkey(Q, 0.5, 0.99, 1,'Velocity Vector Field',
                             coordinates = 'axes',
                             fontproperties={'weight': 'bold'})
 
    axV.axis((0,1024,0,768))
    axV.set_xlabel('x [Pixels]')
+   axV.xaxis.labelpad = 0
    axV.set_ylabel('y [Pixels]')
+   axV.yaxis.labelpad = 0
 
    #invert the y-axis for image coordinates
-   axV.invert_yaxis()
-   axV.grid(True) 
+   axV.invert_yaxis() 
 
-   #******************** velocity histogram plot ********************#
-	# Vx histogram
+   #******************************************** velocity histogram
+   # Vx histogram
    axVX = plt.subplot(gs[0:2,17:24])
    axVX.grid(True)
-   histVX,binsVX = np.histogram(col2,bins=10)
+
+   histVX,binsVX = histogram(vx,bins=10)
    binWidthVX     = 0.7 * (binsVX[1] - binsVX[0])
    centerVX       = (binsVX[:-1] + binsVX[1:]) / 2
    pointsVX = axVX.plot(centerVX,histVX,'-r^',markersize=3.0)[0]
+
+   axVX.set_xlabel('$V_x [pix/s]$')
+   axVX.xaxis.labelpad = 0
+   axVX.set_ylabel('Arb.Counts')
+   axVX.yaxis.labelpad = 0
+
    # Vy histogram
    axVY = plt.subplot(gs[3:5,17:24])
    axVY.grid(True)
-   histVY,binsVY = np.histogram(col3,bins=10)
+
+   histVY,binsVY = histogram(vy,bins=10)
    binWidthVY     = 0.7 * (binsVY[1] - binsVY[0])
    centerVY       = (binsVY[:-1] + binsVY[1:]) / 2
    pointsVY = axVY.plot(centerVY,histVY,'-r^',markersize=3.0)[0]
 
-   #******************** pair correlation plot ********************#
-   # Compute the pair correlation function
-	# Pair correlation function
+   axVY.set_xlabel('$V_y [pix/s]$')
+   axVY.xaxis.labelpad = 0
+   axVY.set_ylabel('Arb.Counts')
+   axVY.yaxis.labelpad = 0
+
+   #******************************************** pair correlation
+   # g(r) histogram
    axPC = plt.subplot(gs[6:8,17:24])
    axPC.grid(True)
-   #axPC.set_xlim([0,cropDist])
-   #axPC.set_ylim([0.0,10.0])
 
-   distM          = PS.distanceMatrix(len(col1),col1,col2,len(col1),col1,col2)                
-   inMDistIndices = PS.sortMaxDist(distM,50)
-   NumPars        = len(inMDistIndices[0])
-   xS    = col1[inMDistIndices[1]]
-   yS    = col2[inMDistIndices[1]]
-   mbinsPC,histPC = PCC.PairCorr(col1,col2,50,1024,768,len(col1))
-	# Now perform particle matching between Demon and PTV based on pairDist
-	
-	
-   # Pair correlation function
+   NumPars = len(y)
+   mbinsPC,histPC = PCC.PairCorr(x,y,75,1024,768,NumPars)
    pointsPC = axPC.plot(mbinsPC[1:],histPC,markersize=1.0)[0]
-   #PCline   = axPC.axvline(parImDim,0,5,linewidth=3,linestyle='dashed', color='m')
+
    axPC.set_xlabel('r [pixels]')
+   axPC.xaxis.labelpad = 0
    axPC.set_ylabel('g(r)')
+   axPC.yaxis.labelpad = 0
    axPC.grid()
 
-   #********************Wrap things up********************#
+   #******************************************** finish up
     
-   
    plt.draw()
-   plt.pause(0.0001)
+   plt.pause(0.5)
 
    #print '!! END FUNCTION PLOTVFIELD' 
    return
 
-def printhello(col0,col1,col2,col3):
+def printhello(x,y,vx,vy):
 
    import sys
-   
 
-   print '!!!!!!!!!!!!Hello From Python Bitches!!!!!!!!!!!!'
+   print '!!!!!!!!!!!!Hello From Python!!!!!!!!!!!!'
    sys.stdout.flush()
    return

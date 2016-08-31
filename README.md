@@ -10,8 +10,9 @@ plotting. The AWESOME Cython project can be found at
 https://github.com/cython/cython
 
 To Compile the code:
-	-g++ c_to_python.c *command line options given by the command "python2.7-config --cflags"* -lpython2.7
+   -g++ c_to_python.c *command line options given by the command "python2.7-config --cflags"* -lpython2.7
    -you may need to install matplotlib using sudo apt-get install python-matplotlib
+
 To-Do:
 ######
 
