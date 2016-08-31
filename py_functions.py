@@ -18,11 +18,12 @@
 def PlotVField(x,y,vx,vy):
    #print '!! BEGIN FUNCTION PLOTVFIELD' 
   
-   import matplotlib.pyplot as plt
-   import matplotlib.gridspec as gridspec
+   from matplotlib import pyplot as plt
+   from matplotlib import gridspec as gridspec
    from numpy import histogram
    import PairCorrCalc as PCC
    
+   # Only resize the figure if it already exists
    if not plt.fignum_exists(1):
        plt.figure(figsize=(16,8))
        plt.ion()
@@ -32,8 +33,8 @@ def PlotVField(x,y,vx,vy):
 
    gs = gridspec.GridSpec(8,24)
   
-      #******************************************** vector field                  
-   #store current axis values for changing later                            
+   #******************************************** vector field
+   # Draw the vector field as a quiver plot                                           
    axV = plt.subplot(gs[0:8,0:15])
    axV.grid(True) 
 
