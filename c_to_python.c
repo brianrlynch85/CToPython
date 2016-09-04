@@ -133,6 +133,11 @@ int main (int argc, char *argv[]){
    PyObject *sys = PyImport_ImportModule("sys");
    PyObject *path = PyObject_GetAttrString(sys, "path");
    PyList_Append(path, PyString_FromString("."));
+
+   PyObject_Print(sys, stdout, 0);
+   printf("\n");
+   PyObject_Print(path, stdout, 0);
+   printf("\n");  
     
    // Convert the module name (from command line) to Python string
    printf("Converting module string: %s\n",argv[1]);
